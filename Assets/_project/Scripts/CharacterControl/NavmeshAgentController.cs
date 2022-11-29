@@ -12,42 +12,42 @@ namespace PointAndClick.CharacterControl
         [SerializeField] private Animator _animator;
         [SerializeField] private NavmeshAgentConfigs _configs;
 
-        private NavMeshAgent _agent;
+        private NavMeshAgent _navmeshAgent;
 
-        private void Awake()
+        private void Start()
         {
-            _agent = GetComponent<NavMeshAgent>();
+            _navmeshAgent = GetComponent<NavMeshAgent>();
         }
 
         private void OnEnable()
         {
             PlayerInputEvents.OnWorldPointClickedEvent += HandleWorldPointClicked;
-            UIEvents.OnIncreaseSpeedButtonClicked += IncreaseSpeed;
-            UIEvents.OnDecreaseSpeedButtonClicked += DecreaseSpeed;
+            UIEvents.OnIncreaseSpeedButtonClicked += IncreaseNavmeshAgentSpeed;
+            UIEvents.OnDecreaseSpeedButtonClicked += DecreaseNavmeshAgentSpeed;
 
         }
 
         private void OnDisable()
         {
             PlayerInputEvents.OnWorldPointClickedEvent -= HandleWorldPointClicked;
-            UIEvents.OnIncreaseSpeedButtonClicked -= IncreaseSpeed;
-            UIEvents.OnDecreaseSpeedButtonClicked -= DecreaseSpeed;
+            UIEvents.OnIncreaseSpeedButtonClicked -= IncreaseNavmeshAgentSpeed;
+            UIEvents.OnDecreaseSpeedButtonClicked -= DecreaseNavmeshAgentSpeed;
         }
 
         private void HandleWorldPointClicked(RaycastHit hit) 
         {
-            _agent.destination = hit.point;
+            _navmeshAgent.destination = hit.point;
         }
 
-        private void IncreaseSpeed() 
+        private void IncreaseNavmeshAgentSpeed() 
         {
-            _agent.speed = Mathf.Clamp(_agent.speed + _configs.IncrementAmmount,
+            _navmeshAgent.speed = Mathf.Clamp(_navmeshAgent.speed + _configs.IncrementAmmount,
                 _configs.MinAgentSpeed, _configs.MaxAgentSpeed);
         }
 
-        private void DecreaseSpeed() 
+        private void DecreaseNavmeshAgentSpeed() 
         {
-            _agent.speed = Mathf.Clamp(_agent.speed - _configs.IncrementAmmount,
+            _navmeshAgent.speed = Mathf.Clamp(_navmeshAgent.speed - _configs.IncrementAmmount,
                 _configs.MinAgentSpeed, _configs.MaxAgentSpeed);
         }
 
@@ -63,7 +63,7 @@ namespace PointAndClick.CharacterControl
                 return;
             }
 
-            float speed = transform.InverseTransformDirection(_agent.velocity).z;
+            float speed = transform.InverseTransformDirection(_navmeshAgent.velocity).z;
             _animator.SetFloat("movementSpeed", speed);
         }
     }
